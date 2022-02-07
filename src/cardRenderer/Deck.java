@@ -1,5 +1,6 @@
 package cardRenderer;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class Deck {
@@ -35,7 +36,10 @@ public class Deck {
 		return deck.get(ind);
 
 	}
-
+	
+	public void shuffle() {
+		Collections.shuffle(deck);
+	}
 
 	public int getDeckMaxNum() {
 		return deckMaxCNum;

@@ -26,6 +26,7 @@ class Panel extends JPanel implements ActionListener{
 	JButton drawNextCard = new JButton("Next Card");
 	int x=20;
 	int y=50;
+	int iteration=0;
 	
 	public Panel() {
 		add(drawNextCard);
@@ -39,11 +40,19 @@ class Panel extends JPanel implements ActionListener{
 		
 		if(drawNext) {
 			x=20;
+			y=20;
+			iteration = 0;
 			userDeck.addCard(masterDeck.returnNext());
 			drawNext=false;
 			for(Card c : userDeck.getDeck()) {
 				drawCard(g2D,c,x,y);
 				x+=50;
+				iteration++;
+				if(iteration == 12) {
+					iteration=0;
+					y+=80;
+					x=20;
+				}
 				
 			}
 			
@@ -70,6 +79,7 @@ class Panel extends JPanel implements ActionListener{
 				type++;
 			}
 		}
+		masterDeck.shuffle();
 	}
 	
 	public void drawCard(Graphics2D g2,Card c,int x,int y) {
