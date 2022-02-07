@@ -1,6 +1,8 @@
 package cardRenderer;
 
 import java.awt.*;
+import java.awt.event.*;
+
 import javax.swing.*;
 
 public class GUI extends JFrame {
@@ -16,45 +18,62 @@ public class GUI extends JFrame {
 	
 }
 
-class Panel extends JPanel {
+class Panel extends JPanel implements ActionListener{
 	
 	Deck userDeck = new Deck(12);
-	Card test1 = new Card(userDeck.getDeckMaxNum(),6,3,1);
-	Card test2 = new Card(userDeck.getDeckMaxNum(),4,3,2);
-	Card test3 = new Card(userDeck.getDeckMaxNum(),9,3,3);
-	int x;
-	int y;
+	Deck masterDeck = new Deck(12);
+	boolean drawNext = false;
+	JButton drawNextCard = new JButton("Next Card");
+	int x=20;
+	int y=50;
 	
 	public Panel() {
-		userDeck.addCard(test1);
-		userDeck.addCard(test2);
-		x = 20;
-		y = 20;
+		add(drawNextCard);
+		drawNextCard.addActionListener(this);
+		fillMasterDeck();
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
 		
-		for(Card c : userDeck.getDeck()) {
-			drawCard(g2D,c,x,y);
-			x += 50;
+		if(drawNext) {
+			x=20;
+			userDeck.addCard(masterDeck.returnNext());
+			drawNext=false;
+			for(Card c : userDeck.getDeck()) {
+				drawCard(g2D,c,x,y);
+				x+=50;
+				
+			}
+			
 		}
-		x = 20;
 		
+		
+	}
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource() == drawNextCard) {
+			drawNext=true;
+			repaint();
+		}
 		
 	}
 	
-	public void drawTest(Graphics2D g2,int x,int y) {
-		g2.drawImage(test1.CARD, x, y,null);	
-		
-		g2.drawString(Integer.toString(test1.getType()), x+19, y+42);
-		g2.drawString(Integer.toString(test1.getNumber()), x+4, y+14);
-		g2.drawString(Integer.toString(test1.getNumber()), x+34, y+70);
+	public void fillMasterDeck() {
+		int num = 1,type=0;
+		for(int i = 0;i<48;i++) {
+			masterDeck.addCard(new Card(userDeck.getDeckMaxNum(),num,4,type));
+			num++;
+			if(num == 13) {
+				num = 1;
+				type++;
+			}
+		}
 	}
+	
 	public void drawCard(Graphics2D g2,Card c,int x,int y) {
-		g2.drawImage(c.CARD, x, y,null);	
-		
+		g2.drawImage(c.CARD, x, y,null);
 		g2.drawString(Integer.toString(c.getType()), x+19, y+42);
 		g2.drawString(Integer.toString(c.getNumber()), x+4, y+14);
 		g2.drawString(Integer.toString(c.getNumber()), x+34, y+70);
